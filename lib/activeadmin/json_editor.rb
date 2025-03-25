@@ -5,7 +5,13 @@ require 'activeadmin/resource_dsl'
 module ActiveAdmin
   module JsonEditor
     class Engine < ::Rails::Engine
-      config.assets.precompile += %w(img/jsoneditor-icons.png)
+      if config.respond_to?(:assets)
+        # Old Rails 6 behavior
+        config.assets.precompile += %w(img/jsoneditor-icons.png)
+      else
+        # Rails 7 workaround: Use app.config instead
+        Rails.application.config.assets.precompile += %w(img/jsoneditor-icons.png)
+      end
 
       rake_tasks do
         task 'assets:precompile' do
